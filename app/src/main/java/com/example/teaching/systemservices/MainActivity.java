@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * in this code sample we're going to demonstrate
@@ -113,5 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent){
         System.out.println("Our activity received an intent: " + intent.toString());
+        //alter the textview in the Activity to show the user that the intent was recieved
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(intent.toString());
+        //TODO: process extras in the intent (if needed)
     }
 }
