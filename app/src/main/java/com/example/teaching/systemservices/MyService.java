@@ -1,11 +1,16 @@
 package com.example.teaching.systemservices;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
 public class MyService extends Service {
+    int notifcationCount;
 
     /**
      * default constructor is called when the service is first started
@@ -14,6 +19,7 @@ public class MyService extends Service {
      */
     public MyService() {
         System.out.println("MyService ctor");
+        notifcationCount = 0;
     }
 
     @Override
@@ -23,7 +29,25 @@ public class MyService extends Service {
      */
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("Service was started successfully!");
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+
+        //instead of a toast, show a notification to the user when the service starts
+        //use the Notification.Builder class to construct a notification
+        Notification.Builder myBuilder = new Notification.Builder(this).
+                setSmallIcon(R.mipmap.ic_launcher). //ic_launcher is one of the built in icons
+                setContentTitle("My service was started!").
+                setContentText("This is the body of my notification, blah blah blah");
+        //create an implicit intent that will be broadcast when the user clicks on the notification
+        Intent myNotificationIntent = new Intent("com.example.marek.NOTIFICATION_CLICKED");
+        //create a PendingIntent to package the Intent for later use (save it for later)
+        PendingIntent myPendingIntent = PendingIntent.getBroadcast(this, 1234, myNotificationIntent, 0);
+        //associate the pending intent with the notification above using Notification.Builder
+        myBuilder.setContentIntent(myPendingIntent);
+        //get an instance of NotificationManager so we can use it to send the Notification!
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //use the NotificationManager instance to notify the user (fire off the notification)
+        notificationManager.notify(notifcationCount++, myBuilder.build()); //myBuilder.build() creates a Notification
+
 
 
         //pay attention: the framework requires this. but you can put it LAST
