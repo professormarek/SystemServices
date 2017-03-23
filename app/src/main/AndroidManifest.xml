@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.teaching.systemservices">
-
+    <!-- don't forget to request the appropriate permissions-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!-- on newer Android Operating System versions, we also need to use the uses-feature tags-->
+    <!-- use GPS feature -->
+    <uses-feature android:name="android.hardware.location.gps"></uses-feature>
+    <!-- use the location from the cellular network provider (not as accurate) -->
+    <uses-feature android:name="android.hardware.location.network"></uses-feature>
+    <!-- DON'T FORGET TO REQUEST THE INTERNET PERMISSION FOR OPENING FACEBOOK LATER -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

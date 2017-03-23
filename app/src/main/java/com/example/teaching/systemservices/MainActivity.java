@@ -1,9 +1,11 @@
 package com.example.teaching.systemservices;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -94,11 +96,30 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startMyService(){
 
-        //we can start MyService with a explicit Intent
-        Intent intent = new Intent(this, MyService.class);
-        //start the service by calling Context.startService()
-        System.out.println("Attempting to start MyService");
-        startService(intent);
+        /**
+         * WARNING: before getting device location from LocationManager
+         * we need to make sure we have permission from the user to get the device's location.
+         * This could be done in the Service itself
+         * but the Activity is where the user interacts with the UI
+         */
+        //query the current permission state (has it already been granted? pending?)
+        int permissionState = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+        if(permissionState != PackageManager.PERMISSION_GRANTED){
+            //in this case, permission has not been granted, so request the permission
+            System.out.println("We do not have ACCESS_FINE_LOCATION permission; requesting permission...");
+            String [] requestedPermissions = new String[] {Manifest.permission.ACCESS_FINE_LOCATION};
+            int requestCode = 1234;
+            requestPermissions(requestedPermissions, requestCode);
+        } else {
+            //happy path
+            System.out.println("ACCESS_FINE_LOCATION permission has been granted, starting service...");
+            //we can start MyService with a explicit Intent
+            Intent intent = new Intent(this, MyService.class);
+            //start the service by calling Context.startService()
+            startService(intent);
+        }
+
+
     }
 
     /**
